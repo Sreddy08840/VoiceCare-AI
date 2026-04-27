@@ -1,0 +1,10 @@
+flowchart LR
+  Client[WebSocket/HTTP Client] --> API[FastAPI Gateway]
+  API --> ASR[ASR Service]
+  API --> Lang[Language Detection]
+  API --> Agent[Agent Orchestrator + Tool Router]
+  Agent --> Sched[Scheduling Service]
+  Agent --> Mem[Memory Store (SQLite)]
+  API --> TTS[TTS Service]
+  API --> Obs[Structured Logs + Latency Profiler]
+  Campaign[Outbound Campaign Service] --> Agent

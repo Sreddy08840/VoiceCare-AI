@@ -1,0 +1,14 @@
+from pathlib import Path
+
+SVG_TEMPLATE = """<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1100\" height=\"520\" viewBox=\"0 0 1100 520\">\n  <style>.n { fill:#eaf2ff; stroke:#1f3f75; stroke-width:2; rx:12; ry:12; } .t { font-family:Arial, sans-serif; font-size:18px; fill:#0f172a; text-anchor:middle; dominant-baseline:middle; } .a { stroke:#334155; stroke-width:2.5; marker-end:url(#arrow); fill:none; }</style>\n  <defs><marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\" markerUnits=\"strokeWidth\"><path d=\"M0,0 L0,6 L9,3 z\" fill=\"#334155\" /></marker></defs>\n  <rect class=\"n\" x=\"40\" y=\"70\" width=\"170\" height=\"70\"/><text class=\"t\" x=\"125\" y=\"105\">Client (WS/HTTP)</text>\n  <rect class=\"n\" x=\"260\" y=\"70\" width=\"180\" height=\"70\"/><text class=\"t\" x=\"350\" y=\"105\">FastAPI Gateway</text>\n  <rect class=\"n\" x=\"500\" y=\"20\" width=\"170\" height=\"70\"/><text class=\"t\" x=\"585\" y=\"55\">ASR Service</text>\n  <rect class=\"n\" x=\"500\" y=\"110\" width=\"170\" height=\"70\"/><text class=\"t\" x=\"585\" y=\"145\">Language Detect</text>\n  <rect class=\"n\" x=\"500\" y=\"200\" width=\"190\" height=\"70\"/><text class=\"t\" x=\"595\" y=\"235\">Agent + Tool Router</text>\n  <rect class=\"n\" x=\"500\" y=\"290\" width=\"170\" height=\"70\"/><text class=\"t\" x=\"585\" y=\"325\">TTS Service</text>\n  <rect class=\"n\" x=\"760\" y=\"70\" width=\"250\" height=\"70\"/><text class=\"t\" x=\"885\" y=\"105\">Memory (SQLite: session + long-term)</text>\n  <rect class=\"n\" x=\"760\" y=\"170\" width=\"220\" height=\"70\"/><text class=\"t\" x=\"870\" y=\"205\">Scheduling Service</text>\n  <rect class=\"n\" x=\"760\" y=\"270\" width=\"230\" height=\"70\"/><text class=\"t\" x=\"875\" y=\"305\">Outbound Campaign Service</text>\n  <rect class=\"n\" x=\"260\" y=\"300\" width=\"190\" height=\"70\"/><text class=\"t\" x=\"355\" y=\"335\">Observability + Latency</text>\n  <path class=\"a\" d=\"M210 105 L260 105\"/><path class=\"a\" d=\"M440 105 L500 55\"/><path class=\"a\" d=\"M440 105 L500 145\"/><path class=\"a\" d=\"M440 105 L500 235\"/><path class=\"a\" d=\"M440 105 L500 325\"/><path class=\"a\" d=\"M690 235 L760 105\"/><path class=\"a\" d=\"M690 235 L760 205\"/><path class=\"a\" d=\"M690 235 L760 305\"/><path class=\"a\" d=\"M355 140 L355 300\"/>\n</svg>\n"""
+
+
+def main() -> None:
+    docs = Path("docs")
+    docs.mkdir(exist_ok=True)
+    (docs / "architecture.svg").write_text(SVG_TEMPLATE)
+    print("Generated docs/architecture.svg")
+
+
+if __name__ == "__main__":
+    main()
