@@ -238,3 +238,10 @@ The agent's behavior is defined in two files you can edit freely:
 - [React](https://react.dev) + [Vite](https://vitejs.dev) — Frontend
 - [Tailwind CSS v4](https://tailwindcss.com) — Styling
 - [PostgreSQL](https://postgresql.org) — Appointment database
+
+---
+
+## ✍️ Author
+
+- **Santosh** ([@Sreddy08840](https://github.com/Sreddy08840))
+
