@@ -11,6 +11,12 @@ function App() {
   const recognitionRef = useRef<any>(null);
   const [voiceSupported, setVoiceSupported] = useState({ stt: false, tts: false });
 
+  const isSessionActiveRef = useRef(isSessionActive);
+  
+  useEffect(() => {
+    isSessionActiveRef.current = isSessionActive;
+  }, [isSessionActive]);
+
   useEffect(() => {
     fetchAppointments();
     
@@ -46,21 +52,28 @@ function App() {
         console.error('STT Error:', event.error);
         if (event.error === 'not-allowed') {
           alert('Microphone permission denied. Please allow mic access in your browser settings.');
+        } else if (event.error === 'network') {
+          console.warn('STT Network Error. Please ensure you have an active internet connection, or if you are using Chrome, Google speech services might be temporarily unavailable or blocked.');
         }
         setStatus(`STT Error: ${event.error}`);
       };
 
       recognition.onend = () => {
         console.log('STT: Ended');
-        if (isSessionActive) {
+        if (isSessionActiveRef.current) {
           console.log('STT: Restarting...');
-          try { recognition.start(); } catch(e) {}
+          // Add a small timeout to prevent tight infinite loop on persistent errors
+          setTimeout(() => {
+             if (isSessionActiveRef.current) {
+               try { recognition.start(); } catch(e) {}
+             }
+          }, 1000);
         }
       };
 
       recognitionRef.current = recognition;
     }
-  }, [isSessionActive]);
+  }, []); // Run only once on mount
 
   const speakText = (text: string) => {
     if ('speechSynthesis' in window) {
