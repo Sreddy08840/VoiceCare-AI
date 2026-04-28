@@ -173,7 +173,17 @@ ClinicVoice AI is highly configurable through Markdown-based agent definitions. 
 
 ---
 
-<div align="center">
-  <p>Built with ❤️ by <a href="https://github.com/Sreddy08840">Sreddy08840</a></p>
-  <p><b>Creator & Lead Developer</b> | Full-Stack · Voice AI · ML Integration</p>
-</div>
+## 🤝 Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Sreddy08840">
+        <img src="https://github.com/Sreddy08840.png" width="100px;" alt="Sreddy08840"/><br/>
+        <sub><b>Sreddy08840</b></sub>
+      </a><br/>
+      <sub>🌱 Creator & Lead Developer</sub><br/>
+      <sub>· Voice AI · </sub>
+    </td>
+  </tr>
+</table>
