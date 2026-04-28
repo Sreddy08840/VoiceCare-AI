@@ -1,258 +1,179 @@
-# 🏥 ClinicVoice AI
-
-> A production-grade, real-time **multilingual voice AI agent** for booking, rescheduling, and cancelling clinical appointments — no human intervention needed.
-
-![Languages](https://img.shields.io/badge/Languages-English%20%7C%20Hindi%20%7C%20Tamil-blue)
-![Stack](https://img.shields.io/badge/Stack-React%20%7C%20Node.js%20%7C%20Python%20%7C%20Groq-green)
-![DB](https://img.shields.io/badge/DB-PostgreSQL%20%7C%20Qdrant%20Cloud-orange)
-
----
-
-## 📋 Table of Contents
-
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Project Structure](#-project-structure)
-- [Prerequisites](#-prerequisites)
-- [Setup & Configuration](#-setup--configuration)
-- [Running the Project](#-running-the-project)
-- [Testing the Agent](#-testing-the-agent)
-- [Skills & Agent Behavior](#-skills--agent-behavior)
+<div align="center">
+  <h1>🏥 ClinicVoice AI</h1>
+  <p><strong>Next-Generation Multilingual Voice Agent for Healthcare</strong></p>
+  <p>
+    <a href="https://github.com/Sreddy08840/VoiceCare-AI/stargazers"><img src="https://img.shields.io/github/stars/Sreddy08840/VoiceCare-AI?style=for-the-badge&color=yellow" alt="Stars"/></a>
+    <a href="https://github.com/Sreddy08840/VoiceCare-AI/issues"><img src="https://img.shields.io/github/issues/Sreddy08840/VoiceCare-AI?style=for-the-badge&color=red" alt="Issues"/></a>
+    <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/>
+  </p>
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python&logoColor=white" alt="Python"/>
+    <img src="https://img.shields.io/badge/Node.js-18+-green?style=flat-square&logo=node.js&logoColor=white" alt="Node.js"/>
+    <img src="https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React"/>
+    <img src="https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"/>
+    <img src="https://img.shields.io/badge/Groq-Llama_3-F55036?style=flat-square" alt="Groq"/>
+    <img src="https://img.shields.io/badge/Qdrant-Vector_DB-FF5252?style=flat-square&logo=qdrant&logoColor=white" alt="Qdrant"/>
+  </p>
+</div>
 
 ---
 
-## ✨ Features
+## 🌟 Overview
 
-- 🎙️ **Real-time voice interaction** via WebSocket streaming
-- 🌐 **Multilingual**: English, हिंदी (Hindi), தமிழ் (Tamil) — auto-detected
-- 🧠 **Context-aware memory** — recalls past appointments and preferences (Qdrant Cloud)
-- 📅 **Appointment scheduling** — book, reschedule, cancel with conflict resolution
-- 📲 **Outbound notifications** — SMS/call reminders (Twilio stub, ready to activate)
-- 🤖 **Groq LLM** (Llama 3 70B) powering the agent with function calling
-- 💊 **Scope enforcement** — politely declines non-medical requests
+**ClinicVoice AI** is a production-ready, ultra-low latency conversational voice AI agent designed specifically for medical clinics. Built with **Groq's Llama-3**, **FastAPI**, and **React**, it enables patients to autonomously book, reschedule, or cancel appointments through natural voice conversations. 
+
+With deep memory retrieval powered by **Qdrant Cloud** and native **Multilingual Support** (English, Hindi, Tamil), ClinicVoice AI represents the bleeding edge of healthcare automation.
 
 ---
 
-## 🏗️ Architecture
+## ✨ Key Features
 
-```
-┌─────────────────────────────────────────────────┐
-│                 React Frontend                   │
-│  (Voice Button · Live Transcription · Dashboard) │
-└───────────────────┬─────────────────────────────┘
-                    │ WebSocket (ws://localhost:3001)
-┌───────────────────▼─────────────────────────────┐
-│           Node.js API Gateway (port 3001)        │
-│   REST /api/appointments  ·  WS Proxy            │
-└───────────────────┬─────────────────────────────┘
-                    │ WebSocket (ws://localhost:8000)
-┌─────────────────────────────────────────────────┐
-│        Python AI Orchestrator (port 8000)        │
-│                                                  │
-│  ┌──────────────┐  ┌────────────┐  ┌──────────┐ │
-│  │ Groq LLM     │  │ Booking    │  │ Memory   │ │
-│  │ Chat Engine  │→ │ Agent      │  │ Agent    │ │
-│  │ (Llama 3.3)  │  │ (Demo Mode)│  │ (Cloud)  │ │
-│  └──────────────┘  └────────────┘  └──────────┘ │
-└─────────────────────────────────────────────────┘
-```
+- ⚡ **Ultra-Low Latency Voice**: Real-time voice interaction via WebSocket streaming.
+- 🌍 **Native Multilingual Engine**: Seamlessly understands and responds in **English**, **हिंदी (Hindi)**, and **தமிழ் (Tamil)** with automatic language detection and code-switching capabilities.
+- 🧠 **Persistent Episodic Memory**: Leverages Qdrant Vector DB to securely recall past appointments, preferences, and patient history across sessions.
+- 📅 **Intelligent Scheduling**: Fully automated booking, rescheduling, and cancellation with proactive conflict resolution.
+- 🛡️ **Strict Scope Enforcement**: Politely but firmly redirects non-medical intents back to clinical scheduling.
+- 🎨 **Modern Dashboard**: A beautiful React frontend providing live transcription, Web Speech API integration, and real-time appointment tracking.
 
 ---
 
-## 📁 Project Structure
+## 🏗️ System Architecture
 
-```
-clinicVoice-AI/
-│
-├── AGENTS.md               # Agent role, language rules, conversation style
-├── SKILL.md                # Booking, Memory, and Error Handling skills
-├── start_servers.ps1       # One-click startup script (Windows)
-│
-├── backend/                # Python AI Orchestrator (FastAPI + WebSocket)
-│   ├── .env                # API Keys (Groq, Qdrant)
-│   ├── main.py             # WebSocket endpoint + agent wiring
-│   ├── requirements.txt    # Python dependencies
-│   ├── agents/
-│   │   ├── chat_engine.py  # Groq LLM + function calling
-│   │   ├── booking.py      # In-Memory appointment logic
-│   │   ├── memory.py       # Qdrant Cloud memory store
-│   └── tools/              # (Legacy mocks)
-│
-├── api-gateway/            # Node.js API Gateway (Express + WebSocket)
-│   └── index.js            # REST routes + WS proxy to Python
-│
-└── frontend/               # React + Vite + Tailwind CSS UI
-    └── src/
-        ├── App.tsx          # Main UI: mic button, transcription, dashboard
+ClinicVoice AI operates on a robust three-tier architecture:
+
+```mermaid
+graph TD
+    subgraph Frontend [React Application]
+        UI[Dashboard & Voice Interface]
+        STT[Web Speech API STT/TTS]
+    end
+
+    subgraph Middleware [Node.js API Gateway]
+        Gateway[Express REST & WS Proxy]
+    end
+
+    subgraph AI_Core [Python Backend - FastAPI]
+        Orchestrator[WebSocket Orchestrator]
+        ChatEngine[Groq Llama-3 Chat Engine]
+        BookingAgent[Booking Agent]
+        MemoryAgent[Qdrant Memory Agent]
+    end
+
+    UI <-->|WebSocket| Gateway
+    STT --> UI
+    Gateway <-->|WebSocket| Orchestrator
+    Orchestrator <--> ChatEngine
+    ChatEngine <--> BookingAgent
+    ChatEngine <--> MemoryAgent
 ```
 
 ---
 
-## 🛠️ Prerequisites
+## 📁 Repository Structure
 
-Make sure you have these installed:
-
-| Tool | Version | Check |
-|------|---------|-------|
-| **Python** | 3.10+ | `py --version` |
-| **Node.js** | 18+ | `node --version` |
-| **npm** | 8+ | `npm --version` |
+```tree
+ClinicVoice-AI/
+├── AGENTS.md               # Core System Prompts: Agent roles & language rules
+├── SKILL.md                # Skill Workflows: Booking, Memory & Error Handling
+├── start_servers.ps1       # 🚀 One-click startup script (Windows)
+│
+├── backend/                # Python AI Orchestrator
+│   ├── main.py             # FastAPI WebSocket endpoint & agent wiring
+│   ├── agents/             # Chat engine, Booking logic, Memory store (Qdrant)
+│   └── requirements.txt    
+│
+├── api-gateway/            # Node.js API Gateway
+│   └── index.js            # REST routes & WS Proxy
+│
+└── frontend/               # React + Vite + Tailwind UI
+    └── src/App.tsx         # Main UI: Mic button, Live Transcription
+```
 
 ---
 
-## ⚙️ Setup & Configuration
+## 🚀 Getting Started
 
-### 1. Configure API Keys
+### Prerequisites
 
-Edit `backend/.env`:
+| Tech | Version | Check Command |
+|------|---------|---------------|
+| **Python** | 3.10+ | `python --version` |
+| **Node.js** | 18+ | `node -v` |
+| **npm** | 8+ | `npm -v` |
+
+### 1. Clone & Configure
+
+```bash
+git clone https://github.com/Sreddy08840/VoiceCare-AI.git
+cd VoiceCare-AI
+```
+
+Create a `.env` file in the `backend/` directory:
 ```env
-# Required — Groq LLM
+# Required — Groq LLM (Llama 3 70B)
 GROQ_API_KEY=your_groq_api_key_here
 
-# Required — Qdrant Cloud
+# Required — Qdrant Cloud (Vector DB)
 QDRANT_URL=https://your-cluster.cloud.qdrant.io
 QDRANT_API_KEY=your_qdrant_api_key_here
 ```
 
 ### 2. Install Dependencies
 
-**Python Backend:**
 ```powershell
-cd backend
-py -m pip install -r requirements.txt
+# Python Backend
+cd backend && py -m pip install -r requirements.txt
+
+# API Gateway
+cd ../api-gateway && npm install
+
+# Frontend
+cd ../frontend && npm install
 ```
 
-**API Gateway:**
-```powershell
-cd api-gateway
-npm install
-```
+### 3. Launch the Platform
 
-**Frontend:**
-```powershell
-cd frontend
-npm install
-```
-
----
-
-## 🚀 Running the Project
-
-### One-Click Start (Windows)
-From the project root, run:
+**Windows Users** can start everything with a single click:
 ```powershell
 .\start_servers.ps1
 ```
 
-This opens **3 terminal windows** automatically:
-1. 🐍 Python AI Orchestrator
-2. 🟢 Node.js API Gateway
-3. ⚛️ React Frontend
+*(This will spawn 3 terminal windows for the Backend, Gateway, and Frontend).*
 
-### Manual Start (run each in a separate terminal)
-
-**Terminal 1 — Python Backend:**
-```powershell
-cd backend
-py -m uvicorn main:app --reload --port 8000
-```
-
-**Terminal 2 — Node.js API Gateway:**
-```powershell
-cd api-gateway
-node index.js
-```
-
-**Terminal 3 — React Frontend:**
-```powershell
-cd frontend
-npm run dev
-```
+**Manual Start:**
+- Backend: `cd backend && py -m uvicorn main:app --reload --port 8000`
+- Gateway: `cd api-gateway && node index.js`
+- Frontend: `cd frontend && npm run dev`
 
 ---
 
-## ✅ Verify All Services Are Running
+## 🧪 Interactive Testing
 
-| Service | URL | Expected Response |
-|---------|-----|-------------------|
-| Python AI | http://localhost:8000 | `{"status":"Python Orchestrator is running"}` |
-| API Gateway | http://localhost:3001/api/appointments | `[]` (or list of appointments) |
-| React UI | http://localhost:5173 | ClinicVoice AI web app |
+1. Open **[http://localhost:5173](http://localhost:5173)** in your browser.
+2. Click the **Blue Microphone Button** to initiate a session.
+3. Use your microphone or the built-in testing simulators to interact:
 
----
-
-## 🧪 Testing the Agent
-
-1. Open **http://localhost:5173** in your browser
-2. Click the **blue microphone button** to start a session
-3. Wait for the **"Listening..."** status and 7 test buttons to appear
-4. Click any test button to simulate a patient speaking:
-
-| Button | Input Sent | Expected Behavior |
-|--------|-----------|-------------------|
-| 1. Book tomorrow | `"Book appointment tomorrow"` | Asks for missing details (doctor, time) |
-| 2. Change to 5pm | `"Change my appointment to 5pm"` | Asks for confirmation before updating |
-| 3. Evening slot | `"I want an evening slot"` | Suggests available evening times |
-| 4. Hindi test | `"कल की अपॉइंटमेंट बुक कर दो"` | Responds entirely in Hindi |
-| 5. Tamil test | `"நாளை ஒரு அப்பாயிண்ட்மெண்ட் வேண்டும்"` | Responds entirely in Tamil |
-| 6. Conflict test | `"Book with Dr. Rao tomorrow at 8 AM"` | Detects conflict, suggests alternatives |
-| 7. Random input | `"Can you order me a pizza?"` | Politely declines, redirects to appointments |
+| Test Scenario | Expected Agent Behavior |
+|---------------|-------------------------|
+| `"Book an appointment tomorrow"` | Asks clarifying questions (Doctor, Time, Dept) |
+| `"Change my appointment to 5pm"` | Identifies existing slot, asks for confirmation before update |
+| `"कल की अपॉइंटमेंट बुक कर दो"` | Seamlessly transitions and responds entirely in **Hindi** |
+| `"Can you order me a pizza?"` | Politely declines & redirects to clinical context |
 
 ---
 
-## 🧠 Skills & Agent Behavior
+## ⚙️ Customizing Agent Behaviors
 
-The agent's behavior is defined in two files you can edit freely:
+ClinicVoice AI is highly configurable through Markdown-based agent definitions. The system automatically reads these files to construct its LLM context.
 
-### `AGENTS.md` — Core Rules
-- Language detection and response rules
-- Scope enforcement (medical appointments only)
-- Slot filling requirements
-- Conversation style (short, polite, natural)
+- **`AGENTS.md`**: Define the core persona, tone, multilingual constraints, and strict domain scoping.
+- **`SKILL.md`**: Map out complex workflows like the 8-step booking process, memory retrieval sequences, and conflict resolution logic.
 
-### `SKILL.md` — Skill Workflows
-- **Appointment Booking**: 8-step flow (intent → slots → validate → availability → confirm → book → notify)
-- **Memory Manager**: recall at session start, store during conversation, summarize at end
-- **Error Handling**: unclear input, missing info, conflicts, out-of-scope, change of mind
-
-> Any changes to `AGENTS.md` or `SKILL.md` are automatically reflected in the LLM's system prompt on the next backend restart.
+*Simply edit these files, restart the backend, and the agent's behavior changes instantly!*
 
 ---
 
-## 🔑 Environment Variables Reference
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `GROQ_API_KEY` | Groq API key for Llama 3 70B LLM | ✅ Yes |
-| `QDRANT_URL` | Qdrant Cloud cluster URL | ⚡ Recommended |
-| `QDRANT_API_KEY` | Qdrant Cloud API key | ⚡ Recommended |
-| `DATABASE_URL` | PostgreSQL connection string | ❌ Optional (uses mock if absent) |
-
----
-
-## 🤝 Built With
-
-- [Groq](https://groq.com) — Ultra-fast LLM inference (Llama 3 70B)
-- [Qdrant](https://qdrant.tech) — Vector database for semantic memory
-- [FastAPI](https://fastapi.tiangolo.com) — Python async web framework
-- [React](https://react.dev) + [Vite](https://vitejs.dev) — Frontend
-- [Tailwind CSS v4](https://tailwindcss.com) — Styling
-- [PostgreSQL](https://postgresql.org) — Appointment database
-
----
-
-## ✍️ Author
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/Sreddy08840">
-        <img src="https://github.com/Sreddy08840.png" width="100px;" alt="Sreddy08840"/><br/>
-        <sub><b>Sreddy08840</b></sub>
-      </a><br/>
-      <sub>🌱 Creator & Lead Developer</sub><br/>
-      <sub>Full-Stack · Voice AI · ML Integration</sub>
-    </td>
-  </tr>
-</table>
-
+<div align="center">
+  <p>Built with ❤️ by <a href="https://github.com/Sreddy08840">Sreddy08840</a></p>
+  <p><b>Creator & Lead Developer</b> | Full-Stack · Voice AI · ML Integration</p>
+</div>
